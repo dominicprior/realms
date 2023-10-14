@@ -1,0 +1,6 @@
+## Interface: 30403
+## Title: realms
+## Notes: Shows the realms of the party members
+## Version: 0.1
+main.lua
+main.xml
