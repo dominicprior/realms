@@ -2,61 +2,9 @@ local updateInterval = 2.0
 local timeSinceLastUpdate = 2.0
 local currZone = "no zone yet"
 
-local notes = {
 
-{'slave pens',
-[[Champion - fear
-Ray - fear
-Soothsayer - MC]]},
-
-{'mana.tombs',
-[[Nexus Terror - fear
-Pandemonius - reflect
-Darkcaster - mana burn
-Theurgist - sheep]]},
-
-{'auchenai crypts',
-[[Possessor - MC]]},
-
-{'sethekk',
-[[Controller - MC totem
-Prophet - fear, ghost
-Oracle - chain lightning
-Serpent - knock back?]]},
-
-{'hillsbrad',
-[[Warden - fear]]},
-
-{'shadow labyrinth',
-[[Fel Overseer - fear
-Deathsworn - stun
-Acolyte - heal
-Assassin - stealth
-Spellbinder - MC]]},
-
-{'mechanar',
-[[Sunseeker - summons adds
-Physician - anesthetic
-Tinkerer - high priority
-Capacitus - bombs, reflects when red]]},
-
-{'steamvault',
-[[Siren - fear
-Bog Overload - poison cloud
-Oracle - aoe silence]]},
-
-{'black morass',
-[[Rift Keeper - sheep, fear, pyroblast
-Temporus - no taunt, healing debuff (disarm), reflect
-Aoenus - face him away]]},
-
-{'botanica',
-[[no botanica info yet]]},
-
-{'arcatraz',
-[[no arcatraz info yet]]},
-
-}
+local realms = { }
+realms[4456] = "en - Nethergarde Keep"
 
 -- Updates the dungeon note if enough time has elapsed
 -- and if we are in a new zone.
@@ -75,19 +23,33 @@ function updateNotes()
     local newZone = GetZoneText()
     if newZone ~= currZone then
         currZone = newZone
-        local note = findNote(currZone)
+        local note = findRealms()
         TestAddon3_MainFrame_xCoorNum:SetText(note)
     end
 end
 
--- Returns the note for the given zone.
+-- Returns the realms.
 
-function findNote(zone)
-    for k, patternAndNote in pairs(notes) do
-        local pattern = string.lower(patternAndNote[1])
-        if string.find(string.lower(zone), pattern) then
-            return patternAndNote[2]
-        end
-    end
-    return zone
+function findRealms()
+    return findRealm("player") .. findRealm("party2") .. findRealm("party3") .. findRealm("party4")
 end
+
+function findRealm(unit)
+    local guid = UnitGUID(unit)  -- e.g. "Player-4456-..."
+    if not guid then return "" end
+    local _, realmNumStr = strsplit("-", guid)
+    local realmNum = tonumber(realmNumStr)
+    local realmInfo = realms[realmNum]
+    if realmInfo then
+        return realmInfo .. "\n"
+    else
+        return realmNumStr .. "\n"
+    end
+end
+
+
+
+-- local _, _, _, _, _, _, realm = GetPlayerInfoByGUID(guid)
+-- local name, rules, locale, region, timezone = strsplit(",", info)
+
+--    [4456]="Nethergarde Keep,PvE,enUS,EU",
