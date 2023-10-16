@@ -8,7 +8,7 @@
          enableMouse="false"
          movable="false">
 
-    <Size x="20" y="44"/>
+    <Size x="14" y="44"/>
     <Anchors>
       <Anchor point="TOPLEFT">
         <Offset x="200" y="-80"/>
